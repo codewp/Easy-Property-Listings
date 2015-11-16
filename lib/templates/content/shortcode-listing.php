@@ -10,6 +10,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 if ( $query_open->have_posts() ) {
+	if ( $attributes['show_map'] && class_exists( 'Easy_Listings_Map' ) ) {
+		$elm_gmap_render = new ELM_Public_Google_Map_Render(
+			array(
+				'listings'          => $query_open,
+				'map_id'            => $attributes['map_div_id'],
+				'output_map_div'    => $attributes['output_map_div'],
+				'map_style_height'  => $attributes['map_style_height'],
+				'default_latitude'  => $attributes['default_latitude'],
+				'default_longitude' => $attributes['default_longitude'],
+				'zoom'              => $attributes['zoom'],
+				'zoom_events'       => $attributes['zoom_events'],
+				'cluster_size'      => $attributes['cluster_size'],
+				'map_types'         => $attributes['map_types'],
+				'auto_zoom'         => $attributes['auto_zoom'],
+				'clustering'        => $attributes['clustering'],
+			)
+		);
+		$elm_gmap_render->create_map();
+	}
 	?>
 	<div class="loop epl-shortcode">
 		<div class="loop-content epl-shortcode-listing <?php echo epl_template_class( $attributes['template'] ); ?>">

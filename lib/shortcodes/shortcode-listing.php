@@ -28,18 +28,31 @@ function epl_shortcode_listing_callback( $atts ) {
 	}
 
 	$attributes = shortcode_atts( array(
-		'post_type'    => $property_types, //Post Type
-		'status'       => array( 'current', 'sold', 'leased' ),
-		'limit'        => '10', // Number of maximum posts to show
-		'author'       => '',	// Author of listings.
-		'featured'	   => 0,	// Featured listings.
-		'template'     => false, // Template can be set to "slim" for home open style template
-		'location'     => '', // Location slug. Should be a name like sorrento
-		'tools_top'    => 'off', // Tools before the loop like Sorter and Grid on or off
-		'tools_bottom' => 'off', // Tools after the loop like pagination on or off
-		'sortby'       => '', // Options: price, date : Default date
-		'sort_order'   => 'DESC',
-		'query_object' => '', // only for internal use . if provided use it instead of custom query
+		'post_type'         => $property_types, //Post Type
+		'status'            => array( 'current', 'sold', 'leased' ),
+		'limit'             => '10', // Number of maximum posts to show
+		'author'            => '',	// Author of listings.
+		'featured'          => 0,	// Featured listings.
+		'template'          => false, // Template can be set to "slim" for home open style template
+		'location'          => '', // Location slug. Should be a name like sorrento
+		'tools_top'         => 'off', // Tools before the loop like Sorter and Grid on or off
+		'tools_bottom'      => 'off', // Tools after the loop like pagination on or off
+		'sortby'            => '', // Options: price, date : Default date
+		'sort_order'        => 'DESC',
+		'query_object'      => '', // only for internal use . if provided use it instead of custom query
+		// Map properties.
+		'show_map'          => 0,
+		'output_map_div'    => 1,
+		'map_div_id'        => '',
+		'map_style_height'  => 500,
+		'default_latitude'  => '39.911607',
+		'default_longitude' => '-100.853613',
+		'zoom'              => 1,
+		'zoom_events'       => 0,
+		'cluster_size'      => -1,
+		'map_types'         => array( 'ROADMAP' ),
+		'auto_zoom'         => 1,
+		'clustering'        => true,
 	), $atts );
 
 	if ( is_string( $attributes['post_type'] ) && $attributes['post_type'] == 'rental' ) {
@@ -138,6 +151,17 @@ function epl_shortcode_listing_callback( $atts ) {
 			$args['meta_key'] =	'property_status';
 			$args['order']    = 'ASC';
 		}
+	}
+
+	// Map properties.
+	if ( $attributes['show_map'] ) {
+		$attributes['map_id']            = trim( $attributes['map_id'] );
+		$attributes['map_style_height']  = absint( $attributes['map_style_height'] ) ? absint( $attributes['map_style_height'] ) : 500;
+		$attributes['default_latitude']  = trim( $attributes['default_latitude'] );
+		$attributes['default_longitude'] = trim( $attributes['default_longitude'] );
+		$attributes['zoom']              = absint( $attributes['zoom'] );
+		$attributes['zoom_events']       = absint( $attributes['zoom_events'] );
+		$attributes['cluster_size']      = (int) $attributes['cluster_size'];
 	}
 
 	$query_open = new WP_Query( $args );
