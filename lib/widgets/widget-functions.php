@@ -855,8 +855,11 @@ add_action( 'pre_get_posts', 'epl_search_pre_get_posts' );
 
 //Is Property Search
 function epl_is_search() {
-	if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'epl_search') {
-		return true;
+	if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'epl_search' ) {
+		$post_type = isset( $_REQUEST['post_type'] ) ? sanitize_key( $_REQUEST['post_type'] ) : '';
+		if ( ! empty( $post_type ) && is_epl_post( $post_type ) ) {
+			return true;
+		}
 	}
 	return false;
 }
