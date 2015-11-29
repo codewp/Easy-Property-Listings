@@ -46,6 +46,18 @@
 				),
 			),
 			array(
+				'key' => 'view',
+				'label' => __( 'View', 'epl' ),
+				'default' => 'default',
+				'type' => 'select',
+				'options' => apply_filters(
+					'epl_search_widget_fields_view',
+					array(
+						'default' => __( 'Default', 'epl' ),
+					)
+				),
+			),
+			array(
 				'key'			=>	'search_id',
 				'label'			=>	__('Property ID','epl'),
 				'default'		=>	'off',
