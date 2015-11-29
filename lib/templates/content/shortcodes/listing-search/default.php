@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing Search Shortcode View.
+ * Listing Search Shortcode Default View.
  *
  * @package    easy-property-listings
  * @subpackage Theme
@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var array  $atts 	Shortcode attributes.
  */
 
-global $wpdb;
-$atts = shortcode_atts( epl_search_get_defaults(), $atts );
 extract( $atts );
 $selected_post_types = $atts['post_type'];
 extract( $_GET );
@@ -54,9 +52,9 @@ if ( ! empty( $selected_post_types ) ) :
 	?>
 	<div class="epl-search-forms-wrapper epl-search-<?php echo $style; ?>">
 	<?php
-		$tabcounter = 1; // reset tab counter
+	$tabcounter = 1; // reset tab counter
 
-		foreach ( $selected_post_types as $post_type ) :
+	foreach ( $selected_post_types as $post_type ) :
 
 		if ( isset($_GET['action'] ) && $_GET['action'] == 'epl_search' ) {
 			if ( $queried_post_type ==  $post_type ) {
@@ -96,12 +94,15 @@ if ( ! empty( $selected_post_types ) ) :
 					$value	=	isset(${$epl_frontend_field['meta_key']}) ? ${$epl_frontend_field['meta_key']} : '';
 					epl_widget_render_frontend_fields( $epl_frontend_field,$config,$value,$post_type,$property_status );
 				}
-			?>
-			<div class="epl-search-submit-row epl-search-submit property-type-search">
-				<input type="submit" value="<?php echo $submit_label != '' ? $submit_label : __('Search', 'epl'); ?>" class="epl-search-btn" />
+				?>
+				<div class="epl-search-submit-row epl-search-submit property-type-search">
+					<input type="submit" value="<?php echo $submit_label != '' ? $submit_label : __('Search', 'epl'); ?>" class="epl-search-btn" />
+				</div>
+			</form>
 			</div>
-		</form>
-		</div>
-	<?php $tabcounter++; endforeach; ?>
+		<?php
+		$tabcounter++;
+	endforeach;
+	?>
 	</div>
 	<?php endif; ?>
