@@ -46,10 +46,10 @@
 				),
 			),
 			array(
-				'key' => 'view',
-				'label' => __( 'View', 'epl' ),
+				'key'     => 'view',
+				'label'   => __( 'View', 'epl' ),
 				'default' => 'default',
-				'type' => 'select',
+				'type'    => 'select',
 				'options' => apply_filters(
 					'epl_search_widget_fields_view',
 					array(
