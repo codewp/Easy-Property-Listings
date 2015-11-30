@@ -22,7 +22,7 @@ class EPL_Widget_Property_Search extends WP_Widget {
 		$defaults = epl_search_get_defaults();
 		$instance = wp_parse_args( (array) $instance, $defaults );
 
-		epl_get_template_part( 'widgets/listing/default.php',
+		epl_get_template_part( 'widgets/listing-search/default.php',
 			array(
 				'args' => $args,
 				'instance' => $instance,
