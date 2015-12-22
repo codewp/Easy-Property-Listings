@@ -1337,15 +1337,6 @@ function epl_get_active_theme_name() {
 	}
 }
 
-function epl_home_pagination_fix( $query) {
-
-	global $wp_query;
-	if( isset($wp_query->query['paged']) )
-		$query->set('paged', $wp_query->query['paged']);
-}
-
-add_action('pre_get_posts','epl_home_pagination_fix');
-
 /**
  * Returns status class
  *
