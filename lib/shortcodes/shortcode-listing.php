@@ -68,7 +68,10 @@ function epl_shortcode_listing_callback( $atts ) {
 	if ( ! is_array( $attributes['post_type'] ) ) {
 		$attributes['post_type'] = array_map( 'trim', explode( ',',$attributes['post_type'] ) );
 	}
-	$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+	$paged = get_query_var( 'paged', 1 );
+	if ( is_front_page() ) {
+		$paged = get_query_var( 'page', 1 );
+	}
 	$args = array(
 		'post_type'      =>	$attributes['post_type'],
 		'posts_per_page' =>	$attributes['limit'],
