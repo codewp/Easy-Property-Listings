@@ -53,6 +53,7 @@ function epl_shortcode_listing_callback( $atts ) {
 		'map_types'         => array( 'ROADMAP' ),
 		'auto_zoom'         => 1,
 		'clustering'        => true,
+		'view'              => 'default',
 	), $atts );
 
 	if ( is_string( $attributes['post_type'] ) && $attributes['post_type'] == 'rental' ) {
@@ -175,7 +176,7 @@ function epl_shortcode_listing_callback( $atts ) {
 
 	ob_start();
 	epl_get_template_part(
-		'shortcode-listing.php',
+		'shortcodes/listing/' . ( ! empty( $attributes['view'] ) ? trim( $attributes['view'] ) . '.php' : 'default.php' ),
 		array(
 			'attributes' => $attributes,
 			'query_open' => $query_open,
