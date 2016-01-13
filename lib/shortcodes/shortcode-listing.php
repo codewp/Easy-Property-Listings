@@ -51,6 +51,7 @@ function epl_shortcode_listing_callback( $atts ) {
 		'zoom_events'       => 0,
 		'cluster_size'      => -1,
 		'map_types'         => array( 'ROADMAP' ),
+		'default_map_type'  => 'ROADMAP',
 		'auto_zoom'         => 1,
 		'clustering'        => true,
 		'view'              => 'default',
