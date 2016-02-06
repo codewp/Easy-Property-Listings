@@ -28,6 +28,7 @@ function epl_shortcode_listing_callback( $atts ) {
 	}
 
 	$attributes = shortcode_atts( array(
+		'title'             => '',
 		'post_type'         => $property_types, //Post Type
 		'status'            => array( 'current', 'sold', 'leased' ),
 		'limit'             => '10', // Number of maximum posts to show
