@@ -35,6 +35,8 @@ function epl_shortcode_listing_callback( $atts ) {
 		'featured'          => 0,	// Featured listings.
 		'template'          => false, // Template can be set to "slim" for home open style template
 		'location'          => '', // Location slug. Should be a name like sorrento
+		'feature'           => '', // Listing Feature slug, another words feature name.
+		'feature_id'        => '', // Listing feature id.
 		'tools_top'         => 'off', // Tools before the loop like Sorter and Grid on or off
 		'tools_bottom'      => 'off', // Tools after the loop like pagination on or off
 		'sortby'            => '', // Options: price, date : Default date
@@ -63,16 +65,12 @@ function epl_shortcode_listing_callback( $atts ) {
 		$meta_key_price = 'property_price';
 	}
 
-	$sort_options = array(
-		'price'			=>	$meta_key_price,
-		'date'			=>	'post_date',
-	);
 	if ( ! is_array( $attributes['post_type'] ) ) {
 		$attributes['post_type'] = array_map( 'trim', explode( ',',$attributes['post_type'] ) );
 	}
-	$paged = get_query_var( 'paged', 1 );
+	$paged = get_query_var( 'paged', 1 ) ? get_query_var( 'paged', 1 ) : 1;
 	if ( is_front_page() ) {
-		$paged = get_query_var( 'page', 1 );
+		$paged = get_query_var( 'page', 1 ) ? get_query_var( 'page', 1 ) : 1;
 	}
 	$args = array(
 		'post_type'      =>	$attributes['post_type'],
@@ -94,14 +92,39 @@ function epl_shortcode_listing_callback( $atts ) {
 		);
 	}
 
+	// Listing location tax query based on location slug.
 	if ( ! empty( $attributes['location'] ) ) {
 		if ( ! is_array( $attributes['location'] ) ) {
 			$attributes['location'] = array_map( 'trim', explode( ',', $attributes['location'] ) );
 
 			$args['tax_query'][] = array(
-				'taxonomy'	=> 'location',
-				'field'		=> 'slug',
-				'terms' 	=> $attributes['location'],
+				'taxonomy' => 'location',
+				'field'    => 'slug',
+				'terms'    => $attributes['location'],
+			);
+		}
+	}
+
+	// Listing feature tax query based on feature slug.
+	if ( ! empty( $attributes['feature'] ) ) {
+		if ( ! is_array( $attributes['feature'] ) ) {
+			$attributes['feature'] = array_map( 'trim', explode( ',', $attributes['feature'] ) );
+			$args['tax_query'][] = array(
+				'taxonomy' => 'tax_feature',
+				'field'    => 'slug',
+				'terms'    => $attributes['feature'],
+			);
+		}
+	}
+
+	// Listing feature tax query based on feature id.
+	if ( ! empty( $attributes['feature_id'] ) ) {
+		if ( ! is_array( $attributes['feature_id'] ) ) {
+			$attributes['feature_id'] = array_map( 'intval', explode( ',', $attributes['feature_id'] ) );
+			$args['tax_query'][] = array(
+				'taxonomy' => 'tax_feature',
+				'field'    => 'id',
+				'terms'    => $attributes['feature_id'],
 			);
 		}
 	}
@@ -111,9 +134,9 @@ function epl_shortcode_listing_callback( $atts ) {
 			$attributes['status'] = array_map( 'trim', explode( ',', $attributes['status'] ) );
 
 			$args['meta_query'][] = array(
-				'key'		=> 'property_status',
-				'value'		=> $attributes['status'],
-				'compare'	=> 'IN',
+				'key'     => 'property_status',
+				'value'   => $attributes['status'],
+				'compare' => 'IN',
 			);
 
 			add_filter( 'epl_sorting_options', 'epl_sorting_options_callback' );
