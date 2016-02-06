@@ -9,6 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var $query_open WP_Query 	Query object for listings.
  */
 
+if ( ! empty( $attributes['title'] ) ) {
+	echo apply_filters( 'epl_listing_shortcode_before_title', '<h2 class="epl-shortcode-title">' ) . $attributes['title'] . apply_filters( 'epl_listing_shortcode_after_title', '</h2>' );
+}
+
 if ( $query_open->have_posts() ) {
 	if ( $attributes['show_map'] && class_exists( 'Easy_Listings_Map' ) ) {
 		$elm_gmap_render = new ELM_Public_Google_Map_Render(
