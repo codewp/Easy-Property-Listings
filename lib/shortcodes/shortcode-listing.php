@@ -36,6 +36,7 @@ function epl_shortcode_listing_callback( $atts ) {
 		'featured'          => 0,	// Featured listings.
 		'template'          => false, // Template can be set to "slim" for home open style template
 		'location'          => '', // Location slug. Should be a name like sorrento
+		'location_id'       => '', // Listing location id.
 		'feature'           => '', // Listing Feature slug, another words feature name.
 		'feature_id'        => '', // Listing feature id.
 		'tools_top'         => 'off', // Tools before the loop like Sorter and Grid on or off
@@ -97,51 +98,60 @@ function epl_shortcode_listing_callback( $atts ) {
 	if ( ! empty( $attributes['location'] ) ) {
 		if ( ! is_array( $attributes['location'] ) ) {
 			$attributes['location'] = array_map( 'trim', explode( ',', $attributes['location'] ) );
-
-			$args['tax_query'][] = array(
-				'taxonomy' => 'location',
-				'field'    => 'slug',
-				'terms'    => $attributes['location'],
-			);
 		}
+		$args['tax_query'][] = array(
+			'taxonomy' => 'location',
+			'field'    => 'slug',
+			'terms'    => $attributes['location'],
+		);
+	}
+
+	// Listing location tax query based on location id.
+	if ( ! empty( $attributes['location_id'] ) ) {
+		if ( ! is_array( $attributes['location_id'] ) ) {
+			$attributes['location_id'] = array_map( 'intval', explode( ',', $attributes['location_id'] ) );
+		}
+		$args['tax_query'][] = array(
+			'taxonomy' => 'location',
+			'field'    => 'id',
+			'terms'    => $attributes['location_id'],
+		);
 	}
 
 	// Listing feature tax query based on feature slug.
 	if ( ! empty( $attributes['feature'] ) ) {
 		if ( ! is_array( $attributes['feature'] ) ) {
 			$attributes['feature'] = array_map( 'trim', explode( ',', $attributes['feature'] ) );
-			$args['tax_query'][] = array(
-				'taxonomy' => 'tax_feature',
-				'field'    => 'slug',
-				'terms'    => $attributes['feature'],
-			);
 		}
+		$args['tax_query'][] = array(
+			'taxonomy' => 'tax_feature',
+			'field'    => 'slug',
+			'terms'    => $attributes['feature'],
+		);
 	}
 
 	// Listing feature tax query based on feature id.
 	if ( ! empty( $attributes['feature_id'] ) ) {
 		if ( ! is_array( $attributes['feature_id'] ) ) {
 			$attributes['feature_id'] = array_map( 'intval', explode( ',', $attributes['feature_id'] ) );
-			$args['tax_query'][] = array(
-				'taxonomy' => 'tax_feature',
-				'field'    => 'id',
-				'terms'    => $attributes['feature_id'],
-			);
 		}
+		$args['tax_query'][] = array(
+			'taxonomy' => 'tax_feature',
+			'field'    => 'id',
+			'terms'    => $attributes['feature_id'],
+		);
 	}
 
 	if ( ! empty( $attributes['status'] ) ) {
 		if ( ! is_array( $attributes['status'] ) ) {
 			$attributes['status'] = array_map( 'trim', explode( ',', $attributes['status'] ) );
-
-			$args['meta_query'][] = array(
-				'key'     => 'property_status',
-				'value'   => $attributes['status'],
-				'compare' => 'IN',
-			);
-
-			add_filter( 'epl_sorting_options', 'epl_sorting_options_callback' );
 		}
+		$args['meta_query'][] = array(
+			'key'     => 'property_status',
+			'value'   => $attributes['status'],
+			'compare' => 'IN',
+		);
+		add_filter( 'epl_sorting_options', 'epl_sorting_options_callback' );
 	}
 
 	if ( ! empty ( $attributes['sortby'] ) ) {
