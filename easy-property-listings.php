@@ -50,6 +50,14 @@ if ( ! class_exists( 'Easy_Property_Listings' ) ) :
 		private static $instance;
 
 		/**
+		 * Service provider of EPL.
+		 *
+		 * @since 1.0.0
+		 * @var   EPL_Service_Provider
+		 */
+		private $service_provider;
+
+		/**
 		 * EPL search fields displayer object.
 		 *
 		 * @since 2.3.1
@@ -76,8 +84,12 @@ if ( ! class_exists( 'Easy_Property_Listings' ) ) :
 				self::$instance->setup_constants();
 				self::$instance->includes();
 				self::$instance->load_textdomain();
+				// Initialize Service Provider.
+				self::$instance->service_provider = new EPL_Service_Provider();
+				// Binding services.
+				self::$instance->service_provider->bind( 'listings', new EPL_Listings() );
 				// Search fields displayer object.
-				self::$instance->search_fields = new EPL_Search_Fields();
+				self::$instance->search_fields    = new EPL_Search_Fields();
 				self::$instance->search_fields->init();
 
 				define( 'EPL_RUNNING',true );
@@ -271,6 +283,9 @@ if ( ! class_exists( 'Easy_Property_Listings' ) ) :
 
 			require_once EPL_PATH_LIB . 'includes/install.php';
 			require_once EPL_PATH_LIB . 'includes/class-epl-search-fields.php';
+			require_once EPL_PATH_LIB . 'includes/class-epl-service-provider.php';
+			require_once EPL_PATH_LIB . 'includes/class-epl-listings.php';
+			require_once EPL_PATH_LIB . 'includes/class-epl-property-listing.php';
 		}
 
 		/**
@@ -304,6 +319,30 @@ if ( ! class_exists( 'Easy_Property_Listings' ) ) :
 				load_plugin_textdomain( 'epl', false, $epl_lang_dir );
 			}
 		}
+
+		/**
+		 * Getting a service of EPL.
+		 *
+		 * @since  1.0.0
+		 * @param  string $key
+		 * @return mixed
+		 */
+		public function __get( $key ) {
+			return $this->service_provider->make( $key );
+		}
+
+		/**
+		 * Binding a service to EPL.
+		 *
+		 * @since  1.0.0
+		 * @param  string $key
+		 * @param  mixed $value
+		 * @return mixed
+		 */
+		public function __set( $key, $value ) {
+			return $this->service_provider->bind( $key, $value );
+		}
+
 	}
 endif; // End if class_exists check
 
