@@ -560,25 +560,46 @@ function epl_property_available_dates() {
 add_action('epl_property_available_dates','epl_property_available_dates');
 
 /**
+ * Outputting property inspection times.
+ *
  * @hooked property_inspection_times
-**/
+ *
+ * @return void
+ */
 function epl_property_inspection_times(){
 	global $property;
 	$property_inspection_times = $property->get_property_inspection_times();
-	$label_home_open = '';
-	if(trim($property_inspection_times) != '') {
-		$label_home_open = $property->get_epl_settings('label_home_open');
-	?>
-	<div class="epl-inspection-times">
-		<span class="epl-inspection-times-label">
-			<?php echo $label_home_open; ?>
-		</span>
-		<?php echo $property_inspection_times; ?>
-	</div>
-	<?php
+	if ( count( $property_inspection_times ) ) {
+		$label_home_open = $property->get_epl_settings( 'label_home_open' );
+		ob_start();
+		?>
+		<div class="epl-inspection-times">
+			<span class="epl-inspection-times-label">
+				<?php echo $label_home_open; ?>
+			</span>
+			<ul class="home-open-wrapper">
+				<?php
+				foreach ( $property_inspection_times as $key => &$element ) {
+					if ( ! empty( $element ) ) {
+						$element_formatted = apply_filters( 'epl_inspection_format', $element );
+						?>
+						<li class='home-open-date'>
+							<a class="epl_inspection_calendar" href="<?php echo get_bloginfo( 'url' ) . '?epl_cal_dl=1&cal=ical&dt=' . base64_encode( htmlspecialchars( $element ) ) . '&propid=' . $property->post->ID; ?>">
+								<?php echo $element_formatted; ?>
+							</a>
+						</li>
+						<?php
+					}
+				}
+				?>
+			</ul>
+		</div>
+		<?php
+		$output_inspection_times = ob_get_clean();
+		echo apply_filters( 'epl_property_inspection_times_output', $output_inspection_times, $property, $property_inspection_times );
 	}
 }
-add_action('epl_property_inspection_times','epl_property_inspection_times');
+add_action( 'epl_property_inspection_times', 'epl_property_inspection_times' );
 
 /**
  * Getting heading/title of the listing.
