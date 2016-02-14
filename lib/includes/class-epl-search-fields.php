@@ -110,6 +110,11 @@ class EPL_Search_Fields {
 	 * @return void
 	 */
 	public function render_select( array $field, $config = '', $value = '', $post_type = '', $property_status = '' ) {
+		// Render multiple select when field multiple index set and it is true.
+		if ( isset( $field['multiple'] ) && $field['multiple'] ) {
+			return $this->render_multiple_select( $field, $config, $select_value, $post_type, $property_status, $out_options );
+		}
+
 		if ( isset( $field['wrap_start'] ) ) {
 			echo '<div class="' . $field['wrap_start'] . '">';
 		}
@@ -166,9 +171,6 @@ class EPL_Search_Fields {
 				<select name="<?php echo $field['meta_key']; ?>"
 					id="<?php echo $field['meta_key']; ?>"
 					class="in-field field-width" multiple>
-					<option value="">
-						<?php echo apply_filters( 'epl_search_widget_option_label_' . $field['option_filter'], __( 'Any', 'epl' ) ); ?>
-					</option>
 					<?php
 					if ( isset( $field['options'] ) && ! empty( $field['options'] ) ) {
 						foreach ( $field['options'] as $k => $v ) {
