@@ -45,6 +45,7 @@ function epl_shortcode_listing_callback( $atts ) {
 		'sort_order'        => 'DESC',
 		'listing_open'      => 0, // Open listings.
 		'query_object'      => '', // only for internal use . if provided use it instead of custom query
+		'autoplay'          => 0, // Autoplay attribute that will use in slider view.
 		// Map properties.
 		'show_map'          => 0,
 		'output_map_div'    => 1,
