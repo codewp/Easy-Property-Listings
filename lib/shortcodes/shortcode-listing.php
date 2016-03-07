@@ -28,6 +28,7 @@ function epl_shortcode_listing_callback( $atts ) {
 	}
 
 	$attributes = shortcode_atts( array(
+		'id'                => '',
 		'title'             => '',
 		'post_type'         => $property_types, //Post Type
 		'status'            => array( 'current', 'sold', 'leased' ),
@@ -86,6 +87,12 @@ function epl_shortcode_listing_callback( $atts ) {
 
 	if ( is_object( $attributes['query_object'] ) ) {
 		$query_open = $attributes['query_object'];
+	}
+
+	// Generating element id.
+	if ( empty( $attributes['id'] ) ) {
+		static $id        = 0;
+		$attributes['id'] = 'listing-carousel-' . $id++;
 	}
 
 	ob_start();
